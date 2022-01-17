@@ -28,19 +28,29 @@
 
 import json
 
+from os.path import expanduser, isfile, abspath
+from ruamel.yaml import YAML
+from typing import Optional
 from threading import Event
 from mycroft_bus_client import MessageBusClient, Message
 from typing import Set
 from pprint import pprint
 
 from neon_mana_utils.config import get_messagebus_config, get_event_filters
+from neon_mana_utils.constants import BASE_CONTEXT
 
 
 def tail_messagebus(include: Set[str] = None, exclude: Set[str] = None,
-                    format_output: bool = False, block=False,
-                    host: str = None, port: int = None,
-                    route: str = None, ssl: bool = False):
-
+                    format_output: bool = False, block: bool = False,
+                    client: MessageBusClient = None):
+    """
+    Follow Messagebus activity like you would a logger
+    :param include: set of msg_type prefixes to include in output (None to include all)
+    :param exclude: set of msg_type prefixes to exclude in output (None to exclude none)
+    :param format_output: if True, pformat logged messages
+    :param block: if True, block this thread until keyboard interrupt
+    :param client: MessageBusClient object to connect and use to monitor
+    """
     def handle_message(serial_message: str):
         message = Message.deserialize(serial_message)
         if include and not any([x for x in include if message.msg_type.startswith(x)]):
@@ -55,22 +65,51 @@ def tail_messagebus(include: Set[str] = None, exclude: Set[str] = None,
         else:
             print(message.serialize())
 
-    default_config = get_messagebus_config()
     default_filters = get_event_filters()
-    host = host or default_config["host"]
-    port = port or default_config["port"]
-    route = route or default_config["route"]
-    ssl = ssl or default_config["ssl"]
     include = include or default_filters["include"]
     exclude = exclude or default_filters["exclude"]
 
-    print(f"Connecting to {host}:{port}{route}")
-    client = MessageBusClient(host, port, route, ssl)
+    print(f"Connecting to "
+          f"{client.config.host}:{client.config.port}{client.config.route}")
     client.on('message', handle_message)
-    client.run_in_thread()
     if block:
         event = Event()
         try:
             event.wait()
         except KeyboardInterrupt:
             pass
+
+
+def send_message_file(file_path: str, bus: MessageBusClient,
+                      response: Optional[str] = None) -> Optional[Message]:
+    """
+    Parse a requested file into a Message object and send it over the bus.
+    If `response` is specified, wait for and return the response message
+    :param file_path: path to json or yaml defined message object to send
+    :param bus: running MessageBusClient session to send message
+    :param response: optional response msg_type to listen for and return
+    :return: Message if response is specified and received
+    """
+    file = abspath(expanduser(file_path))
+    if not isfile(file):
+        raise FileNotFoundError(file)
+    with open(file) as f:
+        try:
+            serial = json.load(f)
+        except json.JSONDecodeError:
+            f.seek(0)
+            serial = YAML().load(f)
+    if not serial or not isinstance(serial, dict):
+        raise ValueError(f"Invalid message specified in {file_path}")
+
+    serial["context"] = serial.get("context") or BASE_CONTEXT
+    try:
+        message = Message(serial["msg_type"],
+                          serial["data"], serial["context"])
+    except KeyError:
+        raise ValueError(f"Invalid message specified in {file_path}")
+
+    if response:
+        return bus.wait_for_response(message, response, 10)
+    else:
+        bus.emit(message)

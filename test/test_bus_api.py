@@ -26,38 +26,18 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from mycroft_bus_client import MessageBusClient, Message
-from neon_mana_utils.constants import BASE_CONTEXT
+import os
+import sys
+import unittest
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+from neon_mana_utils.bus_api import get_stt, get_tts, get_response
 
 
-def start_listening(client: MessageBusClient):
-    """
-    Emit a minimal message to start listening on a standalone device
-    """
-    client.emit(Message("mycroft.mic.listen", context=BASE_CONTEXT))
+class TestBusApi(unittest.TestCase):
+    # TODO: Write unit tests with mocked responses
+    pass
 
 
-def stop(client: MessageBusClient):
-    """
-    Emit a minimal message to 'stop' on a standalone device
-    """
-    client.emit(Message("mycroft.stop", context=BASE_CONTEXT))
-
-
-def say_to(client: MessageBusClient, utterance: str, lang: str):
-    """
-    Emit a minimal text input (mimics a minimal Mycroft message)
-    """
-    data = {"utterances": [utterance],
-            "lang": lang}
-    context = BASE_CONTEXT
-    client.emit(Message("recognizer_loop:utterance", data, context))
-
-
-def speak(client: MessageBusClient, utterance: str):
-    """
-    Emit a minimal speak message (mimics a minimal Mycroft message)
-    """
-    data = {"utterance": utterance}
-    context = BASE_CONTEXT
-    client.emit(Message("speak", data, context))
+if __name__ == '__main__':
+    unittest.main()

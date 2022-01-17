@@ -1,0 +1,6 @@
+{
+  "msg_type": "test",
+  "data": {
+    "arbitrary": "data",
+  }
+}

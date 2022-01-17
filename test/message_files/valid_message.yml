@@ -1,0 +1,5 @@
+msg_type: test
+data:
+  some_data: val
+context:
+  test: True

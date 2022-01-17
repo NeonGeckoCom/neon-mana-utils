@@ -84,7 +84,14 @@ def print_config():
               help="websocket route to connect to")
 def tail_messagebus(host, port, route, ssl, format, include, exclude):
     from neon_mana_utils.messagebus import tail_messagebus
-    tail_messagebus(include, exclude, format, True, host, port, route, ssl)
+    default = get_messagebus_config()
+    config = {"host": host or default["host"],
+              "port": port or default["port"],
+              "route": route or default["route"],
+              "ssl": ssl or default["ssl"]}
+    client = MessageBusClient(config)
+    client.run_in_thread()
+    tail_messagebus(include, exclude, format, True, client)
     click.echo("Exiting")
 
 
@@ -168,9 +175,7 @@ def get_tts(text):
               help="Input utterance to send to skills")
 @click.option('--lang', '-l', default="en-us",
               help="Language of the input utterance")
-@click.option('--message', '-m',
-              help="Optional path to json message to send")
-def get_response(utterance, lang, message):
+def get_response(utterance, lang):
     from neon_mana_utils.bus_api import get_response
     # TODO: Handle message loading DM
     if not utterance:
@@ -184,4 +189,21 @@ def get_response(utterance, lang, message):
         click.echo("No Response")
 
 
-
+@neon_mana_cli.command(help="Send a json or yaml serialized message")
+@click.option('--response', '-r', default=None,
+              help="Optional response message type to listen to")
+@click.argument('file')
+def send_message(response, file):
+    from neon_mana_utils.messagebus import send_message_file
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    try:
+        response = send_message_file(file, client, response)
+        if response:
+            click.echo(pformat(json.loads(response.serialize())))
+        elif response:
+            click.echo("No Response")
+        else:
+            click.echo("Message Sent")
+    except Exception as e:
+        click.echo(e)
