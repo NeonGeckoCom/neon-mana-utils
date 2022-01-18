@@ -34,7 +34,15 @@ from mycroft_bus_client import MessageBusClient, Message
 def get_stt(messagebus_client: MessageBusClient,
             audio_path: Optional[str] = None,
             audio_bytes: Optional[bytes] = None,
-            lang: str = "en-us"):
+            lang: str = "en-us") -> Optional[Message]:
+    """
+    Send audio to the speech module and return the transcription response
+    :param messagebus_client: Running MessageBusClient
+    :param audio_path: Path to audio file to transcribe
+    :param audio_bytes: Audio bytes to transcribe
+    :param lang: language of input audio
+    :returns: Response Message from speech module (None if no response)
+    """
     # TODO: This only works for local host; update API to handle bytes
     ident = str(time())
     data = {"audio_file": audio_path,
@@ -49,6 +57,13 @@ def get_stt(messagebus_client: MessageBusClient,
 def get_tts(messagebus_client: MessageBusClient,
             text_to_speak: str = None,
             speaker: Optional[dict] = None):
+    """
+    Send text to the audio module and return the synthesis response
+    :param messagebus_client: Running MessageBusClient
+    :param text_to_speak: String to synthesize
+    :param speaker: Dict speaker data associated with request
+    :returns: Response Message from audio module (None if no response)
+    """
     ident = str(time())
     data = {"text": text_to_speak}
     context = {"ident": ident,
@@ -61,6 +76,13 @@ def get_tts(messagebus_client: MessageBusClient,
 
 def get_response(messagebus_client: MessageBusClient,
                  utterance: str, lang: str = "en-us") -> Optional[Message]:
+    """
+    Send text to the skills module and return the response from the audio module
+    :param messagebus_client: Running MessageBusClient
+    :param utterance: input to pass to Intent Service
+    :param lang: language of input audio
+    :returns: klat.response Message from audio module (None if no response)
+    """
     ident = str(time())
     data = {
         "utterances": [utterance],

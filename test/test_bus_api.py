@@ -30,13 +30,65 @@ import os
 import sys
 import unittest
 
+from mycroft_bus_client import Message
+from ovos_utils.messagebus import FakeBus
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from neon_mana_utils.bus_api import get_stt, get_tts, get_response
 
 
 class TestBusApi(unittest.TestCase):
-    # TODO: Write unit tests with mocked responses
-    pass
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.test_bus = FakeBus()
+
+    def test_get_stt(self):
+        msg = None
+
+        def handler(message: Message):
+            nonlocal msg
+            msg = message
+            self.test_bus.emit(message.reply(message.context["ident"], {"success": True}))
+
+        self.test_bus.on("neon.get_stt", handler)
+        resp = get_stt(self.test_bus, "test_path")
+        self.assertIsInstance(msg, Message)
+        self.assertIsInstance(resp, Message)
+        self.assertEqual(msg.context, resp.context)
+        self.assertTrue(resp.data["success"])
+        self.assertEqual(msg.data["audio_file"], "test_path")
+
+    def test_get_tts(self):
+        msg = None
+
+        def handler(message: Message):
+            nonlocal msg
+            msg = message
+            self.test_bus.emit(message.reply(message.context["ident"], {"success": True}))
+
+        self.test_bus.on("neon.get_tts", handler)
+        resp = get_tts(self.test_bus, "test input string")
+        self.assertIsInstance(msg, Message)
+        self.assertIsInstance(resp, Message)
+        self.assertEqual(msg.context, resp.context)
+        self.assertTrue(resp.data["success"])
+        self.assertEqual(msg.data["text"], "test input string")
+
+    def test_get_response(self):
+        msg = None
+
+        def handler(message: Message):
+            nonlocal msg
+            msg = message
+            self.test_bus.emit(message.reply("klat.response", {"success": True}))
+
+        self.test_bus.on("recognizer_loop:utterance", handler)
+        resp = get_response(self.test_bus, "This is a test")
+        self.assertIsInstance(msg, Message)
+        self.assertIsInstance(resp, Message)
+        self.assertTrue(resp.data["success"])
+        self.assertIn("klat_data", msg.context)
+        self.assertEqual(msg.data["utterances"], ["This is a test"])
 
 
 if __name__ == '__main__':
