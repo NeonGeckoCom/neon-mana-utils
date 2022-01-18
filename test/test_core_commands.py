@@ -29,14 +29,55 @@
 import os
 import sys
 import unittest
+from threading import Event
+
+from mycroft_bus_client import Message
+from ovos_utils.messagebus import FakeBus
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from neon_mana_utils.core_commands import start_listening, stop, say_to, speak
 
 
 class TestCoreCommands(unittest.TestCase):
-    # TODO: Write unit tests with mocked responses
-    pass
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.bus = FakeBus()
+        cls.event = Event()
+        cls.msg = None
+
+    def setUp(self) -> None:
+        self.event.clear()
+        self.msg = None
+
+    def handler(self, message: Message):
+        self.msg = message
+        self.event.set()
+
+    def test_start_listening(self):
+        self.bus.on("mycroft.mic.listen", self.handler)
+        start_listening(self.bus)
+        self.event.wait(5)
+        self.assertEqual(self.msg.msg_type, "mycroft.mic.listen")
+
+    def test_stop(self):
+        self.bus.on("mycroft.stop", self.handler)
+        stop(self.bus)
+        self.event.wait(5)
+        self.assertEqual(self.msg.msg_type, "mycroft.stop")
+
+    def test_say_to(self):
+        self.bus.on("recognizer_loop:utterance", self.handler)
+        say_to(self.bus, "test")
+        self.event.wait(5)
+        self.assertEqual(self.msg.msg_type, "recognizer_loop:utterance")
+        self.assertEqual(self.msg.data["utterances"], ["test"])
+
+    def test_speak(self):
+        self.bus.on("speak", self.handler)
+        speak(self.bus, "test out")
+        self.event.wait(5)
+        self.assertEqual(self.msg.msg_type, "speak")
+        self.assertEqual(self.msg.data["utterance"], "test out")
 
 
 if __name__ == '__main__':

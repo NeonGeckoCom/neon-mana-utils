@@ -44,7 +44,7 @@ def stop(client: MessageBusClient):
     client.emit(Message("mycroft.stop", context=BASE_CONTEXT))
 
 
-def say_to(client: MessageBusClient, utterance: str, lang: str):
+def say_to(client: MessageBusClient, utterance: str, lang: str = "en-us"):
     """
     Emit a minimal text input (mimics a minimal Mycroft message)
     """
