@@ -89,7 +89,7 @@ def tail_messagebus(host, port, route, ssl, format, include, exclude):
               "port": port or default["port"],
               "route": route or default["route"],
               "ssl": ssl or default["ssl"]}
-    client = MessageBusClient(config)
+    client = MessageBusClient(**config)
     client.run_in_thread()
     tail_messagebus(include, exclude, format, True, client)
     click.echo("Exiting")
