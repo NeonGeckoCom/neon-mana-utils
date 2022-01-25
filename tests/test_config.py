@@ -59,8 +59,8 @@ class TestConfig(unittest.TestCase):
         config_dir = os.path.join(os.path.dirname(__file__), "config")
         filters = get_event_filters(config_dir)
         self.assertEqual(set(filters.keys()), {"include", "exclude"})
-        self.assertEqual(filters["include"], "neon.")
-        self.assertEqual(filters["exclude"], "connected")
+        self.assertEqual(filters["include"], ["neon."])
+        self.assertEqual(filters["exclude"], ["connected"])
 
 
 if __name__ == '__main__':
