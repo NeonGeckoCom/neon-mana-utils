@@ -32,7 +32,7 @@ from pprint import pformat
 from typing import Optional
 
 from ruamel.yaml import YAML
-from xdg import xdg_config_home
+from xdg.BaseDirectory import xdg_config_home
 
 
 _DEFAULT_CONFIG = {
@@ -47,7 +47,7 @@ def get_config_dir() -> str:
     """
     Get the configuration directory for this package
     """
-    config_dir = join(xdg_config_home(), "mana")
+    config_dir = join(xdg_config_home, "mana")
     if not isdir(config_dir):
         makedirs(config_dir)
     return config_dir
