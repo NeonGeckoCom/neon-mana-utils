@@ -1,1 +1,2 @@
 pytest
+ovos-utils~=0.0.12
