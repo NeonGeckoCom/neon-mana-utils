@@ -36,7 +36,7 @@ from mycroft_bus_client import MessageBusClient, Message
 from typing import Set
 from pprint import pprint
 
-from neon_mana_utils.config import get_messagebus_config, get_event_filters
+from neon_mana_utils.config import get_event_filters
 from neon_mana_utils.constants import BASE_CONTEXT
 
 
@@ -88,7 +88,7 @@ def send_message_file(file_path: str, bus: MessageBusClient,
     :param file_path: path to json or yaml defined message object to send
     :param bus: running MessageBusClient session to send message
     :param response: optional response msg_type to listen for and return
-    :return: Message if response is specified and received
+    :returns: Message if response is specified and received
     """
     file = abspath(expanduser(file_path))
     if not isfile(file):

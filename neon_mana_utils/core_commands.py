@@ -33,6 +33,7 @@ from neon_mana_utils.constants import BASE_CONTEXT
 def start_listening(client: MessageBusClient):
     """
     Emit a minimal message to start listening on a standalone device
+    :param client: connected and running MessageBusClient
     """
     client.emit(Message("mycroft.mic.listen", context=BASE_CONTEXT))
 
@@ -40,6 +41,7 @@ def start_listening(client: MessageBusClient):
 def stop(client: MessageBusClient):
     """
     Emit a minimal message to 'stop' on a standalone device
+    :param client: connected and running MessageBusClient
     """
     client.emit(Message("mycroft.stop", context=BASE_CONTEXT))
 
@@ -47,6 +49,9 @@ def stop(client: MessageBusClient):
 def say_to(client: MessageBusClient, utterance: str, lang: str = "en-us"):
     """
     Emit a minimal text input (mimics a minimal Mycroft message)
+    :param client: connected and running MessageBusClient
+    :param utterance: utterance to send as user input
+    :param lang: BCP-47 language code associated with utterance
     """
     data = {"utterances": [utterance],
             "lang": lang}
@@ -57,6 +62,8 @@ def say_to(client: MessageBusClient, utterance: str, lang: str = "en-us"):
 def speak(client: MessageBusClient, utterance: str):
     """
     Emit a minimal speak message (mimics a minimal Mycroft message)
+    :param client: connected and running MessageBusClient
+    :param utterance: utterance to be spoken
     """
     data = {"utterance": utterance}
     context = BASE_CONTEXT

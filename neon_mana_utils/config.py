@@ -46,6 +46,7 @@ _DEFAULT_CONFIG = {
 def get_config_dir() -> str:
     """
     Get the configuration directory for this package
+    :returns: path to config directory
     """
     config_dir = join(xdg_config_home, "mana")
     if not isdir(config_dir):
@@ -53,9 +54,13 @@ def get_config_dir() -> str:
     return config_dir
 
 
-def set_messagebus_config(host, port, route, ssl):
+def set_messagebus_config(host: str, port: int, route: str, ssl: bool):
     """
     Set the default messagebus config
+    :param host: IP or hostname of MessageBus
+    :param port: port used by MessageBus
+    :param route: route used for core communications
+    :param ssl: Connect via SSL if true
     """
     config = {"host": host,
               "port": port,
@@ -66,7 +71,11 @@ def set_messagebus_config(host, port, route, ssl):
         YAML().dump(config, f)
 
 
-def print_config():
+def print_config() -> str:
+    """
+    Get a formatted representation of the configuration
+    :returns: Formatted string representation of configuration files
+    """
     bus_config = f"messagebus.yml\n{pformat(get_messagebus_config())}\n"
     filter_config = f"filters.yml\n{pformat(get_event_filters())}\n"
     return "\n".join((bus_config, filter_config))
@@ -75,6 +84,8 @@ def print_config():
 def get_messagebus_config(config_dir: Optional[str] = None) -> dict:
     """
     Get the configured messagebus config
+    :param config_dir: Optional path to configuration files (else default)
+    :returns: Messagebus config from file or default
     """
     global _DEFAULT_CONFIG
     config_dir = config_dir or get_config_dir()
@@ -89,6 +100,8 @@ def get_messagebus_config(config_dir: Optional[str] = None) -> dict:
 def get_event_filters(config_dir: Optional[str] = None) -> dict:
     """
     Get configured event filters
+    :param config_dir: Optional path to configuration files (else default)
+    :returns: dict of 'include' and 'exclude' event lists
     """
     config_dir = config_dir or get_config_dir()
     filters_file = join(config_dir, "filters.yml")
