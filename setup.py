@@ -56,7 +56,7 @@ setuptools.setup(
     author='Neongecko',
     author_email='developers@neon.ai',
     license='BSD-3-Clause',
-    description="Message Tools for NeonAI",
+    description="Message Application for Neon AI",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/neongeckocom/neon-mana-utils",
