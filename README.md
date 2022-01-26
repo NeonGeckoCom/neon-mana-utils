@@ -54,31 +54,39 @@ common use case would be to monitor the GUI bus while interacting with the core 
 ## Sending Messages
 There are several commands available to interact with a connected Core.
 
-### `listen`
-Send a `mycroft.mic.listen` Message.
-
-### `stop`
-Send a `mycroft.stop` Message.
-
-### `say-to`
-Send a `recognizer_loop:utterance` Message to skills for processing. This sends a minimal message that is
-not sufficient for testing user profiles or multi-user cores.
-
-### `speak`
-Send a `speak` Message to TTS for generation and playback
-
-### `get-stt`
-Send a `neon.get_stt` Message and print the returned Message with transcriptions.
-This will only work under NeonCore.
-
-### `get-tts`
-Send a `neon.get_tts` Message and print the returned Message with a path to generated TTS.
-This will only work under NeonCore.
-
-### `get-response`
-Send a `recognizer_loop:utterance` Message with the appropriate context to return a `klat.shout` response.
-This will only work under NeonCore and will likely be refactored to reflect NeonCore changes.
-
 ### `send-message`
 Send an arbitrary `Message` over the `MessageBus`. The specified file should be a json or yaml
 serialized message. `--response` may optionally define a response message type to wait for and print to the terminal.
+
+### Basic Commands
+These are commands supported by Mycroft and all derivative cores; they replicate some of
+the commands originally found in [mycroft-core/bin](https://github.com/MycroftAI/mycroft-core/tree/e6fe1bbc8affd2f7b22455dc21539ee6725fb45b/bin).
+
+#### `listen`
+Send a `mycroft.mic.listen` Message.
+
+#### `stop`
+Send a `mycroft.stop` Message.
+
+#### `say-to`
+Send a `recognizer_loop:utterance` Message to skills for processing. This sends a minimal message that is
+not sufficient for testing user profiles or multi-user cores.
+
+#### `speak`
+Send a `speak` Message to TTS for generation and playback
+
+### Messagebus API
+These commands are currently specified for `neon-core` only and are not supported 
+by other cores. Work is ongoing to standardize these entrypoints across projects.
+
+#### `get-stt`
+Send a `neon.get_stt` Message and print the returned Message with transcriptions.
+This will only work under NeonCore.
+
+#### `get-tts`
+Send a `neon.get_tts` Message and print the returned Message with a path to generated TTS.
+This will only work under NeonCore.
+
+#### `get-response`
+Send a `recognizer_loop:utterance` Message with the appropriate context to return a `klat.shout` response.
+This will only work under NeonCore and will likely be refactored to reflect NeonCore changes.
