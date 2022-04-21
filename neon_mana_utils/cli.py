@@ -23,7 +23,9 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 import json
+
 from pprint import pformat
 
 import click
@@ -164,6 +166,27 @@ def get_tts(text):
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
     message = get_tts(client, text)
+    if message:
+        click.echo(pformat(json.loads(message.serialize())))
+    else:
+        click.echo("No Response")
+
+
+@neon_mana_cli.command(help="Send an audio file for processing")
+@click.option('--lang', '-l', default="en-us",
+              help="Language of audio in file")
+@click.argument("file")
+def send_audio(lang, file):
+    from neon_mana_utils.bus_api import audio_input
+    if not file:
+        click.echo("No file specified")
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    try:
+        message = audio_input(client, file, lang=lang)
+    except FileNotFoundError as e:
+        click.echo(e)
+        message = None
     if message:
         click.echo(pformat(json.loads(message.serialize())))
     else:

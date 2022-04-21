@@ -25,10 +25,12 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+import base64
+import os
 from time import time
 from typing import Optional
 from mycroft_bus_client import MessageBusClient, Message
+from neon_utils.file_utils import encode_file_to_base64_string
 
 
 def get_stt(messagebus_client: MessageBusClient,
@@ -43,9 +45,10 @@ def get_stt(messagebus_client: MessageBusClient,
     :param lang: language of input audio
     :returns: Response Message from speech module (None if no response)
     """
-    # TODO: This only works for local host; update API to handle bytes
     ident = str(time())
-    data = {"audio_file": audio_path,
+    audio_data = encode_file_to_base64_string(audio_path) if audio_path else \
+        base64.b64encode(audio_bytes).decode("utf-8")
+    data = {"audio_data": audio_data,
             "lang": lang}
     context = {"ident": ident}
     resp = messagebus_client.wait_for_response(Message("neon.get_stt",
@@ -69,6 +72,35 @@ def get_tts(messagebus_client: MessageBusClient,
     context = {"ident": ident,
                "speaker": speaker}
     resp = messagebus_client.wait_for_response(Message("neon.get_tts",
+                                                       data, context),
+                                               ident, 15)
+    return resp
+
+
+def audio_input(messagebus_client: MessageBusClient,
+                audio_path: Optional[str] = None,
+                audio_bytes: Optional[bytes] = None,
+                lang: str = "en-us") -> Optional[Message]:
+    """
+    Send audio to the speech module for skills processing
+    :param messagebus_client: Running MessageBusClient
+    :param audio_path: Path to audio file to transcribe
+    :param audio_bytes: Audio bytes to transcribe
+    :param lang: language of input audio
+    :returns: Response Message from speech module (None if no response)
+    """
+    audio_file = os.path.expanduser(audio_path) if audio_path else None
+    if audio_file and not os.path.isfile(audio_file):
+        raise FileNotFoundError(audio_file)
+    if not any((audio_file, audio_bytes)):
+        raise ValueError("No file or audio bytes specified")
+    ident = str(time())
+    audio_data = encode_file_to_base64_string(audio_file) if audio_file else \
+        base64.b64encode(audio_bytes).decode("utf-8")
+    data = {"audio_data": audio_data,
+            "lang": lang}
+    context = {"ident": ident}
+    resp = messagebus_client.wait_for_response(Message("neon.audio_input",
                                                        data, context),
                                                ident, 15)
     return resp
