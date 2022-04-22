@@ -43,20 +43,23 @@ class TestBusApi(unittest.TestCase):
         cls.test_bus = FakeBus()
 
     def test_get_stt(self):
+        test_file = os.path.join(os.path.dirname(__file__),
+                                 "audio", "stop.wav")
         msg = None
 
         def handler(message: Message):
             nonlocal msg
             msg = message
-            self.test_bus.emit(message.reply(message.context["ident"], {"success": True}))
+            self.test_bus.emit(message.reply(message.context["ident"],
+                                             {"success": True}))
 
         self.test_bus.on("neon.get_stt", handler)
-        resp = get_stt(self.test_bus, "test_path")
+        resp = get_stt(self.test_bus, test_file)
         self.assertIsInstance(msg, Message)
         self.assertIsInstance(resp, Message)
         self.assertEqual(msg.context, resp.context)
         self.assertTrue(resp.data["success"])
-        self.assertEqual(msg.data["audio_file"], "test_path")
+        self.assertIsInstance(msg.data["audio_data"], str)
 
     def test_get_tts(self):
         msg = None
@@ -64,7 +67,8 @@ class TestBusApi(unittest.TestCase):
         def handler(message: Message):
             nonlocal msg
             msg = message
-            self.test_bus.emit(message.reply(message.context["ident"], {"success": True}))
+            self.test_bus.emit(message.reply(message.context["ident"],
+                                             {"success": True}))
 
         self.test_bus.on("neon.get_tts", handler)
         resp = get_tts(self.test_bus, "test input string")
