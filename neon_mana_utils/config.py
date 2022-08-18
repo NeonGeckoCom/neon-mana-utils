@@ -26,12 +26,12 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import yaml
+
 from os import makedirs
 from os.path import join, isdir, isfile
 from pprint import pformat
 from typing import Optional
-
-from ruamel.yaml import YAML
 from ovos_utils.xdg_utils import xdg_config_home
 
 _DEFAULT_CONFIG = {
@@ -67,7 +67,7 @@ def set_messagebus_config(host: str, port: int, route: str, ssl: bool):
               "ssl": ssl}
     config_file = join(get_config_dir(), "messagebus.yml")
     with open(config_file, 'w+') as f:
-        YAML().dump(config, f)
+        yaml.safe_dump(config, f)
 
 
 def print_config() -> str:
@@ -91,7 +91,7 @@ def get_messagebus_config(config_dir: Optional[str] = None) -> dict:
     config_file = join(config_dir, "messagebus.yml")
     if isfile(config_file):
         with open(config_file) as f:
-            config = YAML().load(f)
+            config = yaml.safe_load(f)
         return config
     return _DEFAULT_CONFIG
 
@@ -106,7 +106,7 @@ def get_event_filters(config_dir: Optional[str] = None) -> dict:
     filters_file = join(config_dir, "filters.yml")
     if isfile(filters_file):
         with open(filters_file) as f:
-            config = YAML().load(f)
+            config = yaml.safe_load(f)
         return config
     return {"include": [],
             "exclude": []}
