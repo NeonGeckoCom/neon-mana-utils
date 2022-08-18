@@ -57,6 +57,11 @@ class TestBusApi(unittest.TestCase):
         resp = get_stt(self.test_bus, test_file)
         self.assertIsInstance(msg, Message)
         self.assertIsInstance(resp, Message)
+
+        self.assertEqual(msg.context.pop('source'),
+                         resp.context.pop('destination'))
+        self.assertEqual(msg.context.pop('destination'),
+                         resp.context.pop('source'))
         self.assertEqual(msg.context, resp.context)
         self.assertTrue(resp.data["success"])
         self.assertIsInstance(msg.data["audio_data"], str)
@@ -74,6 +79,11 @@ class TestBusApi(unittest.TestCase):
         resp = get_tts(self.test_bus, "test input string")
         self.assertIsInstance(msg, Message)
         self.assertIsInstance(resp, Message)
+
+        self.assertEqual(msg.context.pop('source'),
+                         resp.context.pop('destination'))
+        self.assertEqual(msg.context.pop('destination'),
+                         resp.context.pop('source'))
         self.assertEqual(msg.context, resp.context)
         self.assertTrue(resp.data["success"])
         self.assertEqual(msg.data["text"], "test input string")
