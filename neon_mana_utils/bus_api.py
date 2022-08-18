@@ -50,7 +50,9 @@ def get_stt(messagebus_client: MessageBusClient,
         base64.b64encode(audio_bytes).decode("utf-8")
     data = {"audio_data": audio_data,
             "lang": lang}
-    context = {"ident": ident}
+    context = {"ident": ident,
+               "source": ["mana"],
+               "destination": ["speech"]}
     resp = messagebus_client.wait_for_response(Message("neon.get_stt",
                                                        data, context),
                                                ident, 15)
@@ -70,7 +72,9 @@ def get_tts(messagebus_client: MessageBusClient,
     ident = str(time())
     data = {"text": text_to_speak}
     context = {"ident": ident,
-               "speaker": speaker}
+               "speaker": speaker,
+               "source": ["mana"],
+               "destination": ["audio"]}
     resp = messagebus_client.wait_for_response(Message("neon.get_tts",
                                                        data, context),
                                                ident, 15)
@@ -99,7 +103,10 @@ def audio_input(messagebus_client: MessageBusClient,
         base64.b64encode(audio_bytes).decode("utf-8")
     data = {"audio_data": audio_data,
             "lang": lang}
-    context = {"ident": ident}
+    context = {"ident": ident,
+               "source": ["mana"],
+               "destination": ["speech"]
+               }
     resp = messagebus_client.wait_for_response(Message("neon.audio_input",
                                                        data, context),
                                                ident, 15)
@@ -123,8 +130,8 @@ def get_response(messagebus_client: MessageBusClient,
     context = {
         "client_name": "neon_cli",
         "client": "cli",
-        "source": "cli_api",
-        "destination": "skills",
+        "source": ["mana"],
+        "destination": ["skills"],
         "ident": ident,
         "neon_should_respond": True,
         "username": "local",

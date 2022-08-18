@@ -216,7 +216,7 @@ def get_response(utterance, lang):
 @click.option('--response', '-r', default=None,
               help="Optional response message type to listen to")
 @click.argument('file')
-def send_message(response, file):
+def send_message_file(response, file):
     from neon_mana_utils.messagebus import send_message_file
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
@@ -230,3 +230,72 @@ def send_message(response, file):
             click.echo("Message Sent")
     except Exception as e:
         click.echo(e)
+
+
+@neon_mana_cli.command(help="Send a simple message with no data or context")
+@click.argument('message')
+def send_message_file(message):
+    from neon_mana_utils.messagebus import send_message_simple
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    send_message_simple(message, client)
+    click.echo(f"Sent: {message}")
+
+
+@neon_mana_cli.command(help="Check if a core service is alive")
+@click.option('--namespace', '-n', default="mycroft",
+              help="Namespace of service to query")
+@click.argument("service")
+def check_service_alive(namespace, service):
+    from neon_mana_utils.status import check_alive
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    ready = check_alive(client, service, namespace)
+    if ready:
+        click.echo(f"{namespace}.{service} is alive")
+    else:
+        click.echo(f"{namespace}.{service} is NOT alive")
+
+
+@neon_mana_cli.command(help="Check if a core service is ready")
+@click.option('--namespace', '-n', default="mycroft",
+              help="Namespace of service to query")
+@click.argument("service")
+def check_service_ready(namespace, service):
+    from neon_mana_utils.status import check_ready
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    ready = check_ready(client, service, namespace)
+    if ready:
+        click.echo(f"{namespace}.{service} is ready")
+    else:
+        click.echo(f"{namespace}.{service} is NOT ready")
+
+
+@neon_mana_cli.command(help="Get a list of available skills")
+def get_skills_list():
+    from neon_mana_utils.skills import get_skills_list
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    skills = get_skills_list(client)
+    click.echo(pformat(skills))
+
+
+@neon_mana_cli.command(help="Deactivate a skill")
+@click.argument("skill")
+def deactivate_skill(skill):
+    from neon_mana_utils.skills import deactivate_skill
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    deactivate_skill(client, skill)
+    click.echo(f"Requested deactivation of: {skill}")
+
+
+@neon_mana_cli.command(help="Activate a skill")
+@click.argument("skill")
+def activate_skill(skill):
+    from neon_mana_utils.skills import deactivate_skill
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    deactivate_skill(client, skill)
+    click.echo(f"Requested activation of: {skill}")
