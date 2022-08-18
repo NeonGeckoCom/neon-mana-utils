@@ -29,5 +29,5 @@
 BASE_CONTEXT = {
     "client_name": "mana",
     "client": "mana",
-    "source": "mana",
+    "source": ["mana"],
 }
