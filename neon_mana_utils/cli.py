@@ -234,7 +234,7 @@ def send_message_file(response, file):
 
 @neon_mana_cli.command(help="Send a simple message with no data or context")
 @click.argument('message')
-def send_message_file(message):
+def send_message(message):
     from neon_mana_utils.messagebus import send_message_simple
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
