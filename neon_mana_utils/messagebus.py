@@ -66,8 +66,8 @@ def tail_messagebus(include: Set[str] = None, exclude: Set[str] = None,
             print(message.serialize())
 
     default_filters = get_event_filters()
-    include = include or default_filters["include"]
-    exclude = exclude or default_filters["exclude"]
+    include = include or default_filters.get("include", [])
+    exclude = exclude or default_filters.get("exclude", [])
 
     print(f"Connecting to "
           f"{client.config.host}:{client.config.port}{client.config.route}")
