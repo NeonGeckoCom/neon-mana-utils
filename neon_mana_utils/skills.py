@@ -79,12 +79,14 @@ def get_active_skills(bus: MessageBusClient) -> list:
     return msg.data.get('skills', list())
 
 
-def get_adapt_manifest(bus: MessageBusClient) -> list:
+def get_adapt_manifest(bus: MessageBusClient, lang: str) -> list:
     """
     Get the manifest of registered Adapt intents
     :param bus: Connected MessageBusClient to query
+    :param lang: BCP-47 lang code to get intents for
     """
     msg = bus.wait_for_response(Message("intent.service.adapt.manifest.get",
+                                        {"lang": lang},
                                         context={"source": ["mana"],
                                                  "destination": ["skills"]}),
                                 reply_type="intent.service.adapt.manifest")
@@ -108,8 +110,8 @@ def get_padatious_intent(bus: MessageBusClient, lang: str,
     """
     Get a Padatious intent for the input utterance
     :param bus: Connected MessageBusClient to query
-    :param lang: language of input utterance
-    :param utterance: input utterance to check
+    :param lang: language of utterance
+    :param utterance: utterance to check
     :returns: dict Padatious intent
     """
     msg = bus.wait_for_response(Message("intent.service.padatious.get",
@@ -118,5 +120,5 @@ def get_padatious_intent(bus: MessageBusClient, lang: str,
                                         {"source": ["mana"],
                                          "destination": ["skills"]}),
                                 reply_type="intent.service.padatious.reply",
-                                timeout=10)
+                                timeout=15)
     return msg.data.get('intent', dict())
