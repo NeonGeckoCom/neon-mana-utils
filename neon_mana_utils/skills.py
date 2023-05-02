@@ -35,6 +35,7 @@ def get_skills_list(bus: MessageBusClient) -> dict:
     :param bus: Connected MessageBusClient to query
     :returns: dict of loaded skills
     """
+    # TODO: Comp. to `intent.service.skills.get`?
     resp = bus.wait_for_response(
             Message("skillmanager.list",
                     context={"source": ["mana"],
@@ -63,3 +64,40 @@ def activate_skill(bus: MessageBusClient, skill: str):
     bus.emit(Message("intent.service.skills.activate", {'skill_id': skill},
                      context={"source": ["mana"],
                               "destination": ["skills"]}))
+
+
+def get_active_skills(bus: MessageBusClient) -> list:
+    """
+    Get active skills from the intent service
+    :param bus: Connected MessageBusClient to query
+    :returns: list of active skills
+    """
+    msg = bus.wait_for_response(Message("intent.service.active_skills.get",
+                                        context={"source": ["mana"],
+                                                 "destination": ["skills"]}),
+                                reply_type="intent.service.active_skills.reply")
+    return msg.data.get('skills', list())
+
+
+def get_adapt_manifest(bus: MessageBusClient) -> list:
+    """
+    Get the manifest of registered Adapt intents
+    :param bus: Connected MessageBusClient to query
+    """
+    msg = bus.wait_for_response(Message("intent.service.adapt.manifest.get",
+                                        context={"source": ["mana"],
+                                                 "destination": ["skills"]}),
+                                reply_type="intent.service.adapt.manifest")
+    return msg.data.get('intents', list())
+
+
+def get_padatious_manifest(bus: MessageBusClient) -> list:
+    """
+    Get the manifest of registered Padatious intents
+    :param bus: Connected MessageBusClient to query
+    """
+    msg = bus.wait_for_response(Message("intent.service.padatious.manifest.get",
+                                        context={"source": ["mana"],
+                                                 "destination": ["skills"]}),
+                                reply_type="intent.service.padatious.manifest")
+    return msg.data.get('intents', list())

@@ -281,6 +281,33 @@ def get_skills_list():
     click.echo(pformat(skills))
 
 
+@neon_mana_cli.command(help="Get a list of active skills")
+def get_active_skills():
+    from neon_mana_utils.skills import get_active_skills
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    skills = get_active_skills(client)
+    click.echo(pformat(skills))
+
+
+@neon_mana_cli.command(help="Get a list of Adapt intents")
+def get_adapt_manifest():
+    from neon_mana_utils.skills import get_adapt_manifest
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    intents = get_adapt_manifest(client)
+    click.echo(pformat(intents))
+
+
+@neon_mana_cli.command(help="Get a list of Padatious intents")
+def get_padatious_manifest():
+    from neon_mana_utils.skills import get_padatious_manifest
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    intents = get_padatious_manifest(client)
+    click.echo(pformat(intents))
+
+
 @neon_mana_cli.command(help="Deactivate a skill")
 @click.argument("skill")
 def deactivate_skill(skill):
