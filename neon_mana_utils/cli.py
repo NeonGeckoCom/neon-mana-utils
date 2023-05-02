@@ -326,3 +326,14 @@ def activate_skill(skill):
     client.run_in_thread()
     deactivate_skill(client, skill)
     click.echo(f"Requested activation of: {skill}")
+
+
+@neon_mana_cli.command(help="Determine Padatious Intent")
+@click.option("--lang", "-l", default="en-us")
+@click.argument("utterance")
+def get_padatious_response(lang, utterance):
+    from neon_mana_utils.skills import get_padatious_intent
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    intent = get_padatious_intent(client, lang, utterance)
+    click.echo(pformat(intent))

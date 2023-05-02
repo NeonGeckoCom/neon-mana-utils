@@ -101,3 +101,21 @@ def get_padatious_manifest(bus: MessageBusClient) -> list:
                                                  "destination": ["skills"]}),
                                 reply_type="intent.service.padatious.manifest")
     return msg.data.get('intents', list())
+
+
+def get_padatious_intent(bus: MessageBusClient, lang: str,
+                         utterance: str) -> dict:
+    """
+    Get a Padatious intent for the input utterance
+    :param bus: Connected MessageBusClient to query
+    :param lang: language of input utterance
+    :param utterance: input utterance to check
+    :returns: dict Padatious intent
+    """
+    msg = bus.wait_for_response(Message("intent.service.padatious.get",
+                                        {'lang': lang,
+                                         'utterance': utterance},
+                                        {"source": ["mana"],
+                                         "destination": ["skills"]}),
+                                reply_type="intent.service.padatious.reply")
+    return msg.data.get('intent', dict())
