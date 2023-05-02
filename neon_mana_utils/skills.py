@@ -117,5 +117,6 @@ def get_padatious_intent(bus: MessageBusClient, lang: str,
                                          'utterance': utterance},
                                         {"source": ["mana"],
                                          "destination": ["skills"]}),
-                                reply_type="intent.service.padatious.reply")
+                                reply_type="intent.service.padatious.reply",
+                                timeout=10)
     return msg.data.get('intent', dict())
