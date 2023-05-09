@@ -291,20 +291,22 @@ def get_active_skills():
 
 
 @neon_mana_cli.command(help="Get a list of Adapt intents")
-def get_adapt_manifest():
+@click.option("--lang", "-l", default="en-us")
+def get_adapt_manifest(lang):
     from neon_mana_utils.skills import get_adapt_manifest
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
-    intents = get_adapt_manifest(client)
+    intents = get_adapt_manifest(client, lang)
     click.echo(pformat(intents))
 
 
 @neon_mana_cli.command(help="Get a list of Padatious intents")
-def get_padatious_manifest():
+@click.option("--lang", "-l", default="en-us")
+def get_padatious_manifest(lang):
     from neon_mana_utils.skills import get_padatious_manifest
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
-    intents = get_padatious_manifest(client)
+    intents = get_padatious_manifest(client, lang)
     click.echo(pformat(intents))
 
 

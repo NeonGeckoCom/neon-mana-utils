@@ -112,12 +112,14 @@ def get_adapt_intent(bus: MessageBusClient, lang: str,
     return msg.data.get('intent', dict())
 
 
-def get_padatious_manifest(bus: MessageBusClient) -> list:
+def get_padatious_manifest(bus: MessageBusClient, lang: str) -> list:
     """
     Get the manifest of registered Padatious intents
     :param bus: Connected MessageBusClient to query
+    :param lang: BCP-47 lang code to get intents for
     """
     msg = bus.wait_for_response(Message("intent.service.padatious.manifest.get",
+                                        {"lang": lang},
                                         context={"source": ["mana"],
                                                  "destination": ["skills"]}),
                                 reply_type="intent.service.padatious.manifest")
