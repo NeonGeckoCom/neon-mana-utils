@@ -35,6 +35,7 @@ def get_skills_list(bus: MessageBusClient) -> dict:
     :param bus: Connected MessageBusClient to query
     :returns: dict of loaded skills
     """
+    # TODO: Comp. to `intent.service.skills.get`?
     resp = bus.wait_for_response(
             Message("skillmanager.list",
                     context={"source": ["mana"],
@@ -63,3 +64,82 @@ def activate_skill(bus: MessageBusClient, skill: str):
     bus.emit(Message("intent.service.skills.activate", {'skill_id': skill},
                      context={"source": ["mana"],
                               "destination": ["skills"]}))
+
+
+def get_active_skills(bus: MessageBusClient) -> list:
+    """
+    Get active skills from the intent service
+    :param bus: Connected MessageBusClient to query
+    :returns: list of active skills
+    """
+    msg = bus.wait_for_response(Message("intent.service.active_skills.get",
+                                        context={"source": ["mana"],
+                                                 "destination": ["skills"]}),
+                                reply_type="intent.service.active_skills.reply")
+    return msg.data.get('skills', list())
+
+
+def get_adapt_manifest(bus: MessageBusClient, lang: str) -> list:
+    """
+    Get the manifest of registered Adapt intents
+    :param bus: Connected MessageBusClient to query
+    :param lang: BCP-47 lang code to get intents for
+    """
+    msg = bus.wait_for_response(Message("intent.service.adapt.manifest.get",
+                                        {"lang": lang},
+                                        context={"source": ["mana"],
+                                                 "destination": ["skills"]}),
+                                reply_type="intent.service.adapt.manifest")
+    return msg.data.get('intents', list())
+
+
+def get_adapt_intent(bus: MessageBusClient, lang: str,
+                     utterance: str) -> dict:
+    """
+    Get an Adapt intent for the input utterance
+    :param bus: Connected MessageBusClient to query
+    :param lang: language of utterance
+    :param utterance: utterance to check
+    :returns: dict Padatious intent
+    """
+    msg = bus.wait_for_response(Message("intent.service.adapt.get",
+                                        {'lang': lang,
+                                         'utterance': utterance},
+                                        {"source": ["mana"],
+                                         "destination": ["skills"]}),
+                                reply_type="intent.service.adapt.reply",
+                                timeout=15)
+    return msg.data.get('intent', dict())
+
+
+def get_padatious_manifest(bus: MessageBusClient, lang: str) -> list:
+    """
+    Get the manifest of registered Padatious intents
+    :param bus: Connected MessageBusClient to query
+    :param lang: BCP-47 lang code to get intents for
+    """
+    msg = bus.wait_for_response(Message("intent.service.padatious.manifest.get",
+                                        {"lang": lang},
+                                        context={"source": ["mana"],
+                                                 "destination": ["skills"]}),
+                                reply_type="intent.service.padatious.manifest")
+    return msg.data.get('intents', list())
+
+
+def get_padatious_intent(bus: MessageBusClient, lang: str,
+                         utterance: str) -> dict:
+    """
+    Get a Padatious intent for the input utterance
+    :param bus: Connected MessageBusClient to query
+    :param lang: language of utterance
+    :param utterance: utterance to check
+    :returns: dict Padatious intent
+    """
+    msg = bus.wait_for_response(Message("intent.service.padatious.get",
+                                        {'lang': lang,
+                                         'utterance': utterance},
+                                        {"source": ["mana"],
+                                         "destination": ["skills"]}),
+                                reply_type="intent.service.padatious.reply",
+                                timeout=15)
+    return msg.data.get('intent', dict())

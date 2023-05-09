@@ -281,6 +281,35 @@ def get_skills_list():
     click.echo(pformat(skills))
 
 
+@neon_mana_cli.command(help="Get a list of active skills")
+def get_active_skills():
+    from neon_mana_utils.skills import get_active_skills
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    skills = get_active_skills(client)
+    click.echo(pformat(skills))
+
+
+@neon_mana_cli.command(help="Get a list of Adapt intents")
+@click.option("--lang", "-l", default="en-us")
+def get_adapt_manifest(lang):
+    from neon_mana_utils.skills import get_adapt_manifest
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    intents = get_adapt_manifest(client, lang)
+    click.echo(pformat(intents))
+
+
+@neon_mana_cli.command(help="Get a list of Padatious intents")
+@click.option("--lang", "-l", default="en-us")
+def get_padatious_manifest(lang):
+    from neon_mana_utils.skills import get_padatious_manifest
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    intents = get_padatious_manifest(client, lang)
+    click.echo(pformat(intents))
+
+
 @neon_mana_cli.command(help="Deactivate a skill")
 @click.argument("skill")
 def deactivate_skill(skill):
@@ -299,3 +328,25 @@ def activate_skill(skill):
     client.run_in_thread()
     deactivate_skill(client, skill)
     click.echo(f"Requested activation of: {skill}")
+
+
+@neon_mana_cli.command(help="Determine Adapt Intent")
+@click.option("--lang", "-l", default="en-us")
+@click.argument("utterance")
+def get_adapt_response(lang, utterance):
+    from neon_mana_utils.skills import get_adapt_intent
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    intent = get_adapt_intent(client, lang, utterance)
+    click.echo(pformat(intent))
+
+
+@neon_mana_cli.command(help="Determine Padatious Intent")
+@click.option("--lang", "-l", default="en-us")
+@click.argument("utterance")
+def get_padatious_response(lang, utterance):
+    from neon_mana_utils.skills import get_padatious_intent
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    intent = get_padatious_intent(client, lang, utterance)
+    click.echo(pformat(intent))
