@@ -93,6 +93,25 @@ def get_adapt_manifest(bus: MessageBusClient, lang: str) -> list:
     return msg.data.get('intents', list())
 
 
+def get_adapt_intent(bus: MessageBusClient, lang: str,
+                     utterance: str) -> dict:
+    """
+    Get an Adapt intent for the input utterance
+    :param bus: Connected MessageBusClient to query
+    :param lang: language of utterance
+    :param utterance: utterance to check
+    :returns: dict Padatious intent
+    """
+    msg = bus.wait_for_response(Message("intent.service.adapt.get",
+                                        {'lang': lang,
+                                         'utterance': utterance},
+                                        {"source": ["mana"],
+                                         "destination": ["skills"]}),
+                                reply_type="intent.service.adapt.reply",
+                                timeout=15)
+    return msg.data.get('intent', dict())
+
+
 def get_padatious_manifest(bus: MessageBusClient) -> list:
     """
     Get the manifest of registered Padatious intents
