@@ -72,7 +72,7 @@ def unload_skill(bus: MessageBusClient, skill: str):
     :param bus: Connected MessageBusClient to query
     :param skill: skill ID to unload
     """
-    bus.emit(Message("skillmanager.deactivate", {'skill_id': skill},
+    bus.emit(Message("skillmanager.deactivate", {'skill': skill},
                      context={"source": ["mana"],
                               "destination": ["skills"]}))
 
@@ -83,7 +83,7 @@ def load_skill(bus: MessageBusClient, skill: str):
     :param bus: Connected MessageBusClient to query
     :param skill: skill ID to load
     """
-    bus.emit(Message("skillmanager.activate", {'skill_id': skill},
+    bus.emit(Message("skillmanager.activate", {'skill': skill},
                      context={"source": ["mana"],
                               "destination": ["skills"]}))
 
@@ -94,7 +94,7 @@ def unload_skills_except(bus: MessageBusClient, skill: str):
     :param bus: Connected MessageBusClient to query
     :param skill: skill ID to keep
     """
-    bus.emit(Message("skillmanager.keep", {'skill_id': skill},
+    bus.emit(Message("skillmanager.keep", {'skill': skill},
                      context={"source": ["mana"],
                               "destination": ["skills"]}))
 
