@@ -340,9 +340,9 @@ def unload_skill(skill):
     click.echo(f"Requested unload of: {skill}")
 
 
-@neon_mana_cli.command(help="Unload a skill in the Skill Manager")
+@neon_mana_cli.command(help="Load a skill in the Skill Manager")
 @click.argument("skill")
-def activate_skill(skill):
+def load_skill(skill):
     from neon_mana_utils.skills import load_skill
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
