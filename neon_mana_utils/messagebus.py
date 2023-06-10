@@ -32,7 +32,7 @@ import yaml
 from os.path import expanduser, isfile, abspath
 from typing import Optional
 from threading import Event
-from mycroft_bus_client import MessageBusClient, Message
+from ovos_bus_client import MessageBusClient, Message
 from typing import Set
 from pprint import pprint
 
