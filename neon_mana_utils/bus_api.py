@@ -29,7 +29,7 @@ import base64
 import os
 from time import time
 from typing import Optional
-from mycroft_bus_client import MessageBusClient, Message
+from ovos_bus_client import MessageBusClient, Message
 from neon_utils.file_utils import encode_file_to_base64_string
 
 
