@@ -310,7 +310,7 @@ def get_padatious_manifest(lang):
     click.echo(pformat(intents))
 
 
-@neon_mana_cli.command(help="Deactivate a skill")
+@neon_mana_cli.command(help="Deactivate a skill for converse handling")
 @click.argument("skill")
 def deactivate_skill(skill):
     from neon_mana_utils.skills import deactivate_skill
@@ -320,14 +320,44 @@ def deactivate_skill(skill):
     click.echo(f"Requested deactivation of: {skill}")
 
 
-@neon_mana_cli.command(help="Activate a skill")
+@neon_mana_cli.command(help="Activate a skill for converse handling")
 @click.argument("skill")
 def activate_skill(skill):
-    from neon_mana_utils.skills import deactivate_skill
+    from neon_mana_utils.skills import activate_skill
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
-    deactivate_skill(client, skill)
+    activate_skill(client, skill)
     click.echo(f"Requested activation of: {skill}")
+
+
+@neon_mana_cli.command(help="Unload a skill from the Skill Manager")
+@click.argument("skill")
+def unload_skill(skill):
+    from neon_mana_utils.skills import unload_skill
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    unload_skill(client, skill)
+    click.echo(f"Requested unload of: {skill}")
+
+
+@neon_mana_cli.command(help="Load a skill in the Skill Manager")
+@click.argument("skill")
+def load_skill(skill):
+    from neon_mana_utils.skills import load_skill
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    load_skill(client, skill)
+    click.echo(f"Requested load of: {skill}")
+
+
+@neon_mana_cli.command(help="Unload all except one skill Skill Manager")
+@click.argument("skill")
+def unload_except(skill):
+    from neon_mana_utils.skills import unload_skills_except
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    unload_skills_except(client, skill)
+    click.echo(f"Requested load of: {skill}")
 
 
 @neon_mana_cli.command(help="Determine Adapt Intent")

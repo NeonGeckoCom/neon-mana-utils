@@ -66,6 +66,39 @@ def activate_skill(bus: MessageBusClient, skill: str):
                               "destination": ["skills"]}))
 
 
+def unload_skill(bus: MessageBusClient, skill: str):
+    """
+    Request unload of a skill
+    :param bus: Connected MessageBusClient to query
+    :param skill: skill ID to unload
+    """
+    bus.emit(Message("skillmanager.deactivate", {'skill': skill},
+                     context={"source": ["mana"],
+                              "destination": ["skills"]}))
+
+
+def load_skill(bus: MessageBusClient, skill: str):
+    """
+    Request load of a skill
+    :param bus: Connected MessageBusClient to query
+    :param skill: skill ID to load
+    """
+    bus.emit(Message("skillmanager.activate", {'skill': skill},
+                     context={"source": ["mana"],
+                              "destination": ["skills"]}))
+
+
+def unload_skills_except(bus: MessageBusClient, skill: str):
+    """
+    Request unload of all but one skill
+    :param bus: Connected MessageBusClient to query
+    :param skill: skill ID to keep
+    """
+    bus.emit(Message("skillmanager.keep", {'skill': skill},
+                     context={"source": ["mana"],
+                              "destination": ["skills"]}))
+
+
 def get_active_skills(bus: MessageBusClient) -> list:
     """
     Get active skills from the intent service
