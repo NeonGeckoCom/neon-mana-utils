@@ -30,7 +30,7 @@ from pprint import pformat
 
 import click
 from click_default_group import DefaultGroup
-from ovos_bus_client import MessageBusClient
+from mycroft_bus_client.client import MessageBusClient
 
 from neon_mana_utils.config import get_messagebus_config
 from neon_mana_utils.version import __version__

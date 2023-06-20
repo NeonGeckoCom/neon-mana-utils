@@ -32,12 +32,12 @@ import yaml
 from os.path import expanduser, isfile, abspath
 from typing import Optional
 from threading import Event
-from ovos_bus_client import MessageBusClient, Message
+from mycroft_bus_client.client import MessageBusClient
 from typing import Set
 from pprint import pprint
 
 from neon_mana_utils.config import get_event_filters
-from neon_mana_utils.constants import BASE_CONTEXT
+from neon_mana_utils.constants import BASE_CONTEXT, Message
 
 
 def tail_messagebus(include: Set[str] = None, exclude: Set[str] = None,

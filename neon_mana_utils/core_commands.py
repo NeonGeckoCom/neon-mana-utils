@@ -26,8 +26,8 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from ovos_bus_client import MessageBusClient, Message
-from neon_mana_utils.constants import BASE_CONTEXT
+from mycroft_bus_client.client import MessageBusClient
+from neon_mana_utils.constants import BASE_CONTEXT, Message
 
 
 def start_listening(client: MessageBusClient):
