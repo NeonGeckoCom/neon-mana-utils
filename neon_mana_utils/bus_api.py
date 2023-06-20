@@ -29,8 +29,9 @@ import base64
 import os
 from time import time
 from typing import Optional
-from ovos_bus_client import MessageBusClient, Message
+from mycroft_bus_client.client import MessageBusClient
 from neon_utils.file_utils import encode_file_to_base64_string
+from neon_mana_utils.constants import Message
 
 
 def get_stt(messagebus_client: MessageBusClient,
