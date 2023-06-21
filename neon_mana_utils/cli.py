@@ -24,11 +24,9 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import json
+import click
 
 from pprint import pformat
-
-import click
 from click_default_group import DefaultGroup
 from mycroft_bus_client.client import MessageBusClient
 
@@ -84,7 +82,10 @@ def print_config():
               help="Connect using secured websocket")
 @click.option('--route', '-r', default=None,
               help="websocket route to connect to")
-def tail_messagebus(host, port, route, ssl, format, include, exclude):
+@click.option('--include-session', '-s', flag=True,
+              help="Include session context in output")
+def tail_messagebus(host, port, route, ssl, format, include, exclude,
+                    include_session):
     from neon_mana_utils.messagebus import tail_messagebus
     default = get_messagebus_config()
     config = {"host": host or default["host"],
@@ -93,7 +94,7 @@ def tail_messagebus(host, port, route, ssl, format, include, exclude):
               "ssl": ssl or default["ssl"]}
     client = MessageBusClient(**config)
     client.run_in_thread()
-    tail_messagebus(include, exclude, format, True, client)
+    tail_messagebus(include, exclude, format, True, client, include_session)
     click.echo("Exiting")
 
 
@@ -138,7 +139,9 @@ def speak(utterance):
               help="File to transcribe")
 @click.option('--lang', '-l', default="en-us",
               help="Language of audio in file")
-def get_stt(file, lang):
+@click.option('--include-session', '-s', flag=True,
+              help="Include session context in output")
+def get_stt(file, lang, include_session):
     from neon_mana_utils.bus_api import get_stt
 
     if not file:
@@ -149,7 +152,9 @@ def get_stt(file, lang):
     client.run_in_thread()
     message = get_stt(client, audio_path=file, lang=lang)
     if message:
-        click.echo(pformat(json.loads(message.serialize())))
+        if not include_session:
+            message.context.pop("session", None)
+        click.echo(pformat(message.as_dict()))
     else:
         click.echo("No Response")
 
@@ -167,7 +172,7 @@ def get_tts(text):
     client.run_in_thread()
     message = get_tts(client, text)
     if message:
-        click.echo(pformat(json.loads(message.serialize())))
+        click.echo(pformat(message.as_dict()))
     else:
         click.echo("No Response")
 
@@ -188,7 +193,7 @@ def send_audio(lang, file):
         click.echo(e)
         message = None
     if message:
-        click.echo(pformat(json.loads(message.serialize())))
+        click.echo(pformat(message.as_dict()))
     else:
         click.echo("No Response")
 
@@ -198,7 +203,9 @@ def send_audio(lang, file):
               help="Input utterance to send to skills")
 @click.option('--lang', '-l', default="en-us",
               help="Language of the input utterance")
-def get_response(utterance, lang):
+@click.option('--include-session', '-s', flag=True,
+              help="Include session context in output")
+def get_response(utterance, lang, include_session):
     from neon_mana_utils.bus_api import get_response
     # TODO: Handle message loading DM
     if not utterance:
@@ -207,7 +214,9 @@ def get_response(utterance, lang):
     client.run_in_thread()
     message = get_response(client, utterance, lang)
     if message:
-        click.echo(pformat(json.loads(message.serialize())))
+        if not include_session:
+            message.context.pop("session", None)
+        click.echo(pformat(message.as_dict()))
     else:
         click.echo("No Response")
 
@@ -215,15 +224,19 @@ def get_response(utterance, lang):
 @neon_mana_cli.command(help="Send a json or yaml serialized message")
 @click.option('--response', '-r', default=None,
               help="Optional response message type to listen to")
+@click.option('--include-session', '-s', flag=True,
+              help="Include session context in output")
 @click.argument('file')
-def send_message_file(response, file):
+def send_message_file(response, include_session, file):
     from neon_mana_utils.messagebus import send_message_file
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
     try:
         response = send_message_file(file, client, response)
         if response:
-            click.echo(pformat(json.loads(response.serialize())))
+            if not include_session:
+                response.context.pop('session', None)
+            click.echo(pformat(response.as_dict()))
         elif response:
             click.echo("No Response")
         else:
@@ -233,13 +246,24 @@ def send_message_file(response, file):
 
 
 @neon_mana_cli.command(help="Send a simple message with no data or context")
+@click.option('--response', '-r', flag=True,
+              help="Listen for `.response` message")
+@click.option('--include-session', '-s', flag=True,
+              help="Include session context in output")
 @click.argument('message')
-def send_message(message):
+def send_message(response, include_session, message):
     from neon_mana_utils.messagebus import send_message_simple
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
-    send_message_simple(message, client)
-    click.echo(f"Sent: {message}")
+    resp = send_message_simple(message, client)
+    if response:
+        if not resp:
+            click.echo("No Response")
+        if not include_session:
+            resp.context.pop('session', None)
+        click.echo(pformat(response.as_dict()))
+    else:
+        click.echo(f"Sent: {message}")
 
 
 @neon_mana_cli.command(help="Check if a core service is alive")
