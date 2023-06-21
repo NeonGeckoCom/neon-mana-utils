@@ -122,9 +122,12 @@ def send_message_file(file_path: str, bus: MessageBusClient,
         bus.emit(message)
 
 
-def send_message_simple(msg_type: str, bus: MessageBusClient):
+def send_message_simple(msg_type: str, bus: MessageBusClient,
+                        expect_response: bool = False):
     """
     Send a message with no data or context. This can be useful for mocking
     ready messages or audio status changes.
     """
+    if expect_response:
+        return bus.wait_for_response(Message(msg_type))
     bus.emit(Message(msg_type))

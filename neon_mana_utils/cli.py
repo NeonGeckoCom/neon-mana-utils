@@ -255,10 +255,11 @@ def send_message(response, include_session, message):
     from neon_mana_utils.messagebus import send_message_simple
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
-    resp = send_message_simple(message, client)
+    resp = send_message_simple(message, client, response)
     if response:
         if not resp:
             click.echo("No Response")
+            return
         if not include_session:
             resp.context.pop('session', None)
         click.echo(pformat(response.as_dict()))
