@@ -262,7 +262,7 @@ def send_message(response, include_session, message):
             return
         if not include_session:
             resp.context.pop('session', None)
-        click.echo(pformat(response.as_dict()))
+        click.echo(pformat(resp.as_dict()))
     else:
         click.echo(f"Sent: {message}")
 
