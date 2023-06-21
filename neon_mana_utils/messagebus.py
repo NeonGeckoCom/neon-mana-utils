@@ -42,7 +42,8 @@ from neon_mana_utils.constants import BASE_CONTEXT, Message
 
 def tail_messagebus(include: Set[str] = None, exclude: Set[str] = None,
                     format_output: bool = False, block: bool = False,
-                    client: MessageBusClient = None):
+                    client: MessageBusClient = None,
+                    include_session: bool = False):
     """
     Follow Messagebus activity like you would a logger
     :param include: set of msg_type prefixes to include in output (None to include all)
@@ -50,20 +51,26 @@ def tail_messagebus(include: Set[str] = None, exclude: Set[str] = None,
     :param format_output: if True, pformat logged messages
     :param block: if True, block this thread until keyboard interrupt
     :param client: MessageBusClient object to connect and use to monitor
+    :param include_session: if True, include message.context['session']
     """
     def handle_message(serial_message: str):
         message = Message.deserialize(serial_message)
-        if include and not any([x for x in include if message.msg_type.startswith(x)]):
+        if include and not any([x for x in include
+                                if message.msg_type.startswith(x)]):
             # Message not specified in included types
             return
-        if exclude and any([x for x in exclude if message.msg_type.startswith(x)]):
+        if exclude and any([x for x in exclude
+                            if message.msg_type.startswith(x)]):
             # Message is specified in excluded types
             return
+        if not include_session:
+            message.context.pop("session", None)
+        serialized = message.as_dict()
         if format_output:
-            pprint(json.loads(message.serialize()))
+            pprint(serialized)
             print('---')
         else:
-            print(message.serialize())
+            print(serialized)
 
     default_filters = get_event_filters()
     include = include or default_filters.get("include", [])
@@ -115,9 +122,12 @@ def send_message_file(file_path: str, bus: MessageBusClient,
         bus.emit(message)
 
 
-def send_message_simple(msg_type: str, bus: MessageBusClient):
+def send_message_simple(msg_type: str, bus: MessageBusClient,
+                        expect_response: bool = False):
     """
     Send a message with no data or context. This can be useful for mocking
     ready messages or audio status changes.
     """
+    if expect_response:
+        return bus.wait_for_response(Message(msg_type))
     bus.emit(Message(msg_type))
