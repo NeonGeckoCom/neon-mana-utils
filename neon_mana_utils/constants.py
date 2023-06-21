@@ -38,5 +38,12 @@ BASE_CONTEXT = {
 
 
 class Message(_Message):
+    @staticmethod
+    def deserialize(value):
+        obj = json.loads(value)
+        return Message(obj.get('type') or '',
+                       obj.get('data') or {},
+                       obj.get('context') or {})
+
     def as_dict(self):
         return json.loads(self.serialize())
