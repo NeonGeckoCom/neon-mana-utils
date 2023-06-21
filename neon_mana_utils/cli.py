@@ -82,7 +82,7 @@ def print_config():
               help="Connect using secured websocket")
 @click.option('--route', '-r', default=None,
               help="websocket route to connect to")
-@click.option('--include-session', '-s', flag=True,
+@click.option('--include-session', '-s', is_flag=True,
               help="Include session context in output")
 def tail_messagebus(host, port, route, ssl, format, include, exclude,
                     include_session):
@@ -139,7 +139,7 @@ def speak(utterance):
               help="File to transcribe")
 @click.option('--lang', '-l', default="en-us",
               help="Language of audio in file")
-@click.option('--include-session', '-s', flag=True,
+@click.option('--include-session', '-s', is_flag=True,
               help="Include session context in output")
 def get_stt(file, lang, include_session):
     from neon_mana_utils.bus_api import get_stt
@@ -203,7 +203,7 @@ def send_audio(lang, file):
               help="Input utterance to send to skills")
 @click.option('--lang', '-l', default="en-us",
               help="Language of the input utterance")
-@click.option('--include-session', '-s', flag=True,
+@click.option('--include-session', '-s', is_flag=True,
               help="Include session context in output")
 def get_response(utterance, lang, include_session):
     from neon_mana_utils.bus_api import get_response
@@ -224,7 +224,7 @@ def get_response(utterance, lang, include_session):
 @neon_mana_cli.command(help="Send a json or yaml serialized message")
 @click.option('--response', '-r', default=None,
               help="Optional response message type to listen to")
-@click.option('--include-session', '-s', flag=True,
+@click.option('--include-session', '-s', is_flag=True,
               help="Include session context in output")
 @click.argument('file')
 def send_message_file(response, include_session, file):
@@ -246,9 +246,9 @@ def send_message_file(response, include_session, file):
 
 
 @neon_mana_cli.command(help="Send a simple message with no data or context")
-@click.option('--response', '-r', flag=True,
+@click.option('--response', '-r', is_flag=True,
               help="Listen for `.response` message")
-@click.option('--include-session', '-s', flag=True,
+@click.option('--include-session', '-s', is_flag=True,
               help="Include session context in output")
 @click.argument('message')
 def send_message(response, include_session, message):
