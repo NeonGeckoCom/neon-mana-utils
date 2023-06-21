@@ -25,6 +25,7 @@
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import click
+import json
 
 from pprint import pformat
 from click_default_group import DefaultGroup
@@ -154,7 +155,7 @@ def get_stt(file, lang, include_session):
     if message:
         if not include_session:
             message.context.pop("session", None)
-        click.echo(pformat(message.as_dict()))
+        click.echo(pformat(json.loads(message.serialize())))
     else:
         click.echo("No Response")
 
@@ -172,7 +173,7 @@ def get_tts(text):
     client.run_in_thread()
     message = get_tts(client, text)
     if message:
-        click.echo(pformat(message.as_dict()))
+        click.echo(pformat(json.loads(message.serialize())))
     else:
         click.echo("No Response")
 
@@ -193,7 +194,7 @@ def send_audio(lang, file):
         click.echo(e)
         message = None
     if message:
-        click.echo(pformat(message.as_dict()))
+        click.echo(pformat(json.loads(message.serialize())))
     else:
         click.echo("No Response")
 
@@ -216,7 +217,7 @@ def get_response(utterance, lang, include_session):
     if message:
         if not include_session:
             message.context.pop("session", None)
-        click.echo(pformat(message.as_dict()))
+        click.echo(pformat(json.loads(message.serialize())))
     else:
         click.echo("No Response")
 
@@ -236,7 +237,7 @@ def send_message_file(response, include_session, file):
         if response:
             if not include_session:
                 response.context.pop('session', None)
-            click.echo(pformat(response.as_dict()))
+            click.echo(pformat(json.loads(response.serialize())))
         elif response:
             click.echo("No Response")
         else:
@@ -262,7 +263,7 @@ def send_message(response, include_session, message):
             return
         if not include_session:
             resp.context.pop('session', None)
-        click.echo(pformat(resp.as_dict()))
+        click.echo(pformat(json.loads(resp.serialize())))
     else:
         click.echo(f"Sent: {message}")
 
