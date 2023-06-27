@@ -1,20 +1,52 @@
 # Changelog
 
-## [0.0.5a7](https://github.com/NeonGeckoCom/neon-mana-utils/tree/0.0.5a7) (2023-05-09)
+## [0.1.1a6](https://github.com/NeonGeckoCom/neon-mana-utils/tree/0.1.1a6) (2023-06-27)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon-mana-utils/compare/0.0.4...0.0.5a7)
+[Full Changelog](https://github.com/NeonGeckoCom/neon-mana-utils/compare/0.1.1a5...0.1.1a6)
 
 **Merged pull requests:**
 
-- Update GitHub automation [\#24](https://github.com/NeonGeckoCom/neon-mana-utils/pull/24) ([NeonDaniel](https://github.com/NeonDaniel))
-- Add intent service interface methods [\#23](https://github.com/NeonGeckoCom/neon-mana-utils/pull/23) ([NeonDaniel](https://github.com/NeonDaniel))
-- Specify `setup.py` path explicitly [\#22](https://github.com/NeonGeckoCom/neon-mana-utils/pull/22) ([NeonDaniel](https://github.com/NeonDaniel))
-- Update build automation to default branch [\#21](https://github.com/NeonGeckoCom/neon-mana-utils/pull/21) ([NeonDaniel](https://github.com/NeonDaniel))
-- Fix relative paths in setup.py [\#20](https://github.com/NeonGeckoCom/neon-mana-utils/pull/20) ([NeonDaniel](https://github.com/NeonDaniel))
-- Fix workflow reference [\#19](https://github.com/NeonGeckoCom/neon-mana-utils/pull/19) ([NeonDaniel](https://github.com/NeonDaniel))
-- Update to use shared version\_bump.py script [\#18](https://github.com/NeonGeckoCom/neon-mana-utils/pull/18) ([NeonDaniel](https://github.com/NeonDaniel))
-- Remove invalid release Docker action [\#16](https://github.com/NeonGeckoCom/neon-mana-utils/pull/16) ([NeonDaniel](https://github.com/NeonDaniel))
-- Update GitHub workflows [\#14](https://github.com/NeonGeckoCom/neon-mana-utils/pull/14) ([NeonDaniel](https://github.com/NeonDaniel))
+- Update bus references in tests [\#32](https://github.com/NeonGeckoCom/neon-mana-utils/pull/32) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.1.1a5](https://github.com/NeonGeckoCom/neon-mana-utils/tree/0.1.1a5) (2023-06-21)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon-mana-utils/compare/0.1.1a4...0.1.1a5)
+
+**Merged pull requests:**
+
+- Filter `session` context [\#31](https://github.com/NeonGeckoCom/neon-mana-utils/pull/31) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.1.1a4](https://github.com/NeonGeckoCom/neon-mana-utils/tree/0.1.1a4) (2023-06-21)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon-mana-utils/compare/0.1.1a3...0.1.1a4)
+
+**Merged pull requests:**
+
+- allow exlude/include only \(default definitions\) [\#17](https://github.com/NeonGeckoCom/neon-mana-utils/pull/17) ([emphasize](https://github.com/emphasize))
+
+## [0.1.1a3](https://github.com/NeonGeckoCom/neon-mana-utils/tree/0.1.1a3) (2023-06-20)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon-mana-utils/compare/0.1.1a2...0.1.1a3)
+
+**Merged pull requests:**
+
+- Revert changes to reduce init latency [\#29](https://github.com/NeonGeckoCom/neon-mana-utils/pull/29) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.1.1a2](https://github.com/NeonGeckoCom/neon-mana-utils/tree/0.1.1a2) (2023-06-10)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon-mana-utils/compare/0.1.1a1...0.1.1a2)
+
+**Merged pull requests:**
+
+- Refactor messagebus dependency [\#28](https://github.com/NeonGeckoCom/neon-mana-utils/pull/28) ([NeonDaniel](https://github.com/NeonDaniel))
+
+## [0.1.1a1](https://github.com/NeonGeckoCom/neon-mana-utils/tree/0.1.1a1) (2023-06-10)
+
+[Full Changelog](https://github.com/NeonGeckoCom/neon-mana-utils/compare/0.1.0...0.1.1a1)
+
+**Merged pull requests:**
+
+- Add methods for load/unload of skills in the SkillManager [\#27](https://github.com/NeonGeckoCom/neon-mana-utils/pull/27) ([NeonDaniel](https://github.com/NeonDaniel))
 
 
 
