@@ -26,8 +26,24 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import json
+
+from mycroft_bus_client.message import Message as _Message
+
 BASE_CONTEXT = {
     "client_name": "mana",
     "client": "mana",
     "source": ["mana"],
 }
+
+
+class Message(_Message):
+    @staticmethod
+    def deserialize(value):
+        obj = json.loads(value)
+        return Message(obj.get('type') or '',
+                       obj.get('data') or {},
+                       obj.get('context') or {})
+
+    def as_dict(self):
+        return json.loads(self.serialize())

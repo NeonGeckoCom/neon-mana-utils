@@ -26,7 +26,8 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from mycroft_bus_client import Message, MessageBusClient
+from mycroft_bus_client.client import MessageBusClient
+from neon_mana_utils.constants import Message
 
 
 def get_skills_list(bus: MessageBusClient) -> dict:
@@ -62,6 +63,39 @@ def activate_skill(bus: MessageBusClient, skill: str):
     :param skill: skill ID to activate
     """
     bus.emit(Message("intent.service.skills.activate", {'skill_id': skill},
+                     context={"source": ["mana"],
+                              "destination": ["skills"]}))
+
+
+def unload_skill(bus: MessageBusClient, skill: str):
+    """
+    Request unload of a skill
+    :param bus: Connected MessageBusClient to query
+    :param skill: skill ID to unload
+    """
+    bus.emit(Message("skillmanager.deactivate", {'skill': skill},
+                     context={"source": ["mana"],
+                              "destination": ["skills"]}))
+
+
+def load_skill(bus: MessageBusClient, skill: str):
+    """
+    Request load of a skill
+    :param bus: Connected MessageBusClient to query
+    :param skill: skill ID to load
+    """
+    bus.emit(Message("skillmanager.activate", {'skill': skill},
+                     context={"source": ["mana"],
+                              "destination": ["skills"]}))
+
+
+def unload_skills_except(bus: MessageBusClient, skill: str):
+    """
+    Request unload of all but one skill
+    :param bus: Connected MessageBusClient to query
+    :param skill: skill ID to keep
+    """
+    bus.emit(Message("skillmanager.keep", {'skill': skill},
                      context={"source": ["mana"],
                               "destination": ["skills"]}))
 
