@@ -31,7 +31,7 @@ import sys
 import unittest
 from threading import Event
 
-from ovos_bus_client import Message
+from mycroft_bus_client import Message
 from ovos_utils.messagebus import FakeBus
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
