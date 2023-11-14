@@ -64,7 +64,9 @@ def tail_messagebus(include: Set[str] = None, exclude: Set[str] = None,
             # Message is specified in excluded types
             return
         if not include_session:
-            message.context.pop("session", None)
+            session = message.context.pop("session", dict())
+            session_len = len(json.dumps(session))
+            message.context["session"] = f"{session_len} chars omitted"
         serialized = message.as_dict()
         if format_output:
             pprint(serialized)
