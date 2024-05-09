@@ -28,7 +28,7 @@
 
 import json
 
-from mycroft_bus_client.message import Message as _Message
+from ovos_bus_client.message import Message as _Message
 
 BASE_CONTEXT = {
     "client_name": "mana",
