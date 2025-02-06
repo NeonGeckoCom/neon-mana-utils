@@ -97,6 +97,7 @@ def tail_messagebus(host, port, route, ssl, format, include, exclude,
     client.run_in_thread()
     tail_messagebus(include, exclude, format, True, client, include_session)
     click.echo("Exiting")
+    client.close()
 
 
 @neon_mana_cli.command(help="Start listening immediately")
@@ -105,6 +106,7 @@ def listen():
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
     start_listening(client)
+    client.close()
 
 
 @neon_mana_cli.command(help="Emit a stop message")
@@ -113,6 +115,7 @@ def stop():
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
     stop(client)
+    client.close()
 
 
 @neon_mana_cli.command(help="Emit a minimal user input message")
@@ -124,6 +127,7 @@ def say_to(utterance, lang):
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
     say_to(client, utterance, lang)
+    client.close()
 
 
 @neon_mana_cli.command(help="Emit a minimal speak message")
@@ -133,6 +137,7 @@ def speak(utterance):
     client = MessageBusClient(**get_messagebus_config())
     client.run_in_thread()
     speak(client, utterance)
+    client.close()
 
 
 @neon_mana_cli.command(help="Get an STT response")
@@ -158,6 +163,7 @@ def get_stt(file, lang, include_session):
         click.echo(pformat(json.loads(message.serialize())))
     else:
         click.echo("No Response")
+    client.close()
 
 
 @neon_mana_cli.command(help="Get a TTS response")
@@ -176,6 +182,7 @@ def get_tts(text):
         click.echo(pformat(json.loads(message.serialize())))
     else:
         click.echo("No Response")
+    client.close()
 
 
 @neon_mana_cli.command(help="Send an audio file for processing")
@@ -197,6 +204,7 @@ def send_audio(lang, file):
         click.echo(pformat(json.loads(message.serialize())))
     else:
         click.echo("No Response")
+    client.close()
 
 
 @neon_mana_cli.command(help="Get a skill response")
@@ -220,6 +228,7 @@ def get_response(utterance, lang, include_session):
         click.echo(pformat(json.loads(message.serialize())))
     else:
         click.echo("No Response")
+    client.close()
 
 
 @neon_mana_cli.command(help="Send a json or yaml serialized message")
@@ -244,6 +253,7 @@ def send_message_file(response, include_session, file):
             click.echo("Message Sent")
     except Exception as e:
         click.echo(e)
+    client.close()
 
 
 @neon_mana_cli.command(help="Send a simple message with no data or context")
@@ -266,6 +276,7 @@ def send_message(response, include_session, message):
         click.echo(pformat(json.loads(resp.serialize())))
     else:
         click.echo(f"Sent: {message}")
+    client.close()
 
 
 @neon_mana_cli.command(help="Check if a core service is alive")
@@ -281,6 +292,7 @@ def check_service_alive(namespace, service):
         click.echo(f"{namespace}.{service} is alive")
     else:
         click.echo(f"{namespace}.{service} is NOT alive")
+    client.close()
 
 
 @neon_mana_cli.command(help="Check if a core service is ready")
@@ -296,6 +308,7 @@ def check_service_ready(namespace, service):
         click.echo(f"{namespace}.{service} is ready")
     else:
         click.echo(f"{namespace}.{service} is NOT ready")
+    client.close()
 
 
 @neon_mana_cli.command(help="Get a list of available skills")
@@ -305,6 +318,7 @@ def get_skills_list():
     client.run_in_thread()
     skills = get_skills_list(client)
     click.echo(pformat(skills))
+    client.close()
 
 
 @neon_mana_cli.command(help="Get a list of active skills")
@@ -314,6 +328,7 @@ def get_active_skills():
     client.run_in_thread()
     skills = get_active_skills(client)
     click.echo(pformat(skills))
+    client.close()
 
 
 @neon_mana_cli.command(help="Get a list of Adapt intents")
@@ -324,6 +339,7 @@ def get_adapt_manifest(lang):
     client.run_in_thread()
     intents = get_adapt_manifest(client, lang)
     click.echo(pformat(intents))
+    client.close()
 
 
 @neon_mana_cli.command(help="Get a list of Padatious intents")
@@ -334,6 +350,7 @@ def get_padatious_manifest(lang):
     client.run_in_thread()
     intents = get_padatious_manifest(client, lang)
     click.echo(pformat(intents))
+    client.close()
 
 
 @neon_mana_cli.command(help="Deactivate a skill for converse handling")
@@ -344,6 +361,7 @@ def deactivate_skill(skill):
     client.run_in_thread()
     deactivate_skill(client, skill)
     click.echo(f"Requested deactivation of: {skill}")
+    client.close()
 
 
 @neon_mana_cli.command(help="Activate a skill for converse handling")
@@ -354,6 +372,7 @@ def activate_skill(skill):
     client.run_in_thread()
     activate_skill(client, skill)
     click.echo(f"Requested activation of: {skill}")
+    client.close()
 
 
 @neon_mana_cli.command(help="Unload a skill from the Skill Manager")
@@ -364,6 +383,7 @@ def unload_skill(skill):
     client.run_in_thread()
     unload_skill(client, skill)
     click.echo(f"Requested unload of: {skill}")
+    client.close()
 
 
 @neon_mana_cli.command(help="Load a skill in the Skill Manager")
@@ -374,6 +394,7 @@ def load_skill(skill):
     client.run_in_thread()
     load_skill(client, skill)
     click.echo(f"Requested load of: {skill}")
+    client.close()
 
 
 @neon_mana_cli.command(help="Unload all except one skill Skill Manager")
@@ -384,6 +405,7 @@ def unload_except(skill):
     client.run_in_thread()
     unload_skills_except(client, skill)
     click.echo(f"Requested load of: {skill}")
+    client.close()
 
 
 @neon_mana_cli.command(help="Determine Adapt Intent")
@@ -395,6 +417,7 @@ def get_adapt_response(lang, utterance):
     client.run_in_thread()
     intent = get_adapt_intent(client, lang, utterance)
     click.echo(pformat(intent))
+    client.close()
 
 
 @neon_mana_cli.command(help="Determine Padatious Intent")
@@ -406,3 +429,4 @@ def get_padatious_response(lang, utterance):
     client.run_in_thread()
     intent = get_padatious_intent(client, lang, utterance)
     click.echo(pformat(intent))
+    client.close()
