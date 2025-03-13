@@ -1,25 +1,12 @@
 # Changelog
 
-## [0.2.3a2](https://github.com/NeonGeckoCom/neon-mana-utils/tree/0.2.3a2) (2024-04-26)
+## [0.3.1a1](https://github.com/NeonGeckoCom/neon-mana-utils/tree/0.3.1a1) (2025-03-13)
 
-[Full Changelog](https://github.com/NeonGeckoCom/neon-mana-utils/compare/0.2.3a1...0.2.3a2)
-
-**Fixed bugs:**
-
-- Uninstalls packages that need to be installed [\#40](https://github.com/NeonGeckoCom/neon-mana-utils/issues/40)
-- \[BUG\] ovos 0.0.8 compat [\#39](https://github.com/NeonGeckoCom/neon-mana-utils/issues/39)
+[Full Changelog](https://github.com/NeonGeckoCom/neon-mana-utils/compare/0.3.0...0.3.1a1)
 
 **Merged pull requests:**
 
-- Loosen ovos-utils dependency to allow 0.1 [\#41](https://github.com/NeonGeckoCom/neon-mana-utils/pull/41) ([NeonDaniel](https://github.com/NeonDaniel))
-
-## [0.2.3a1](https://github.com/NeonGeckoCom/neon-mana-utils/tree/0.2.3a1) (2023-11-14)
-
-[Full Changelog](https://github.com/NeonGeckoCom/neon-mana-utils/compare/0.2.2...0.2.3a1)
-
-**Merged pull requests:**
-
-- Include JSON length of omitted `session` context [\#38](https://github.com/NeonGeckoCom/neon-mana-utils/pull/38) ([NeonDaniel](https://github.com/NeonDaniel))
+- Update license notices [\#43](https://github.com/NeonGeckoCom/neon-mana-utils/pull/43) ([NeonDaniel](https://github.com/NeonDaniel))
 
 
 
