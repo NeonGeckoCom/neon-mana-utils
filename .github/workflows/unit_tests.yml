@@ -11,12 +11,12 @@ jobs:
   unit_tests:
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9, '3.10']
+        python-version: [3.9, '3.10', '3.11']
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -29,43 +29,43 @@ jobs:
         run: |
           pytest tests/test_bus_api.py --doctest-modules --junitxml=tests/bus-api-test-results.xml
       - name: Upload skill patch test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: bus-api-test-results
+          name: bus-api-test-results-${{ matrix.python-version }}
           path: tests/bus-api-test-results.xml
 
       - name: Test Config
         run: |
           pytest tests/test_config.py --doctest-modules --junitxml=tests/config-test-results.xml
       - name: Upload config test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: config-test-results
+          name: config-test-results-${{ matrix.python-version }}
           path: tests/config-test-results.xml
 
       - name: Test Constants
         run: |
           pytest tests/test_constants.py --doctest-modules --junitxml=tests/constants-test-results.xml
       - name: Upload constants test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: constants-test-results
+          name: constants-test-results-${{ matrix.python-version }}
           path: tests/constants-test-results.xml
 
       - name: Test Core Commands
         run: |
           pytest tests/test_core_commands.py --doctest-modules --junitxml=tests/core-commands-test-results.xml
       - name: Upload core commands test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: core-commands-test-results
+          name: core-commands-test-results-${{ matrix.python-version }}
           path: tests/core-commands-test-results.xml
 
       - name: Test Messagebus
         run: |
           pytest tests/test_messagebus.py --doctest-modules --junitxml=tests/messagebus-test-results.xml
       - name: Upload messagebus test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: messagebus-test-results
+          name: messagebus-test-results-${{ matrix.python-version }}
           path: tests/messagebus-test-results.xml
