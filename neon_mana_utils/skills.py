@@ -189,7 +189,7 @@ def get_skill_api(bus: MessageBusClient, skill_id: str) -> dict:
     msg = bus.wait_for_response(Message(f"{skill_id}.public_api",
                                         context={"source": ["mana"],
                                                  "destination": ["skills"]}),
-                                reply_type="skillmanager.api.reply")
+                                )
     return msg.data if msg else {}
 
 
