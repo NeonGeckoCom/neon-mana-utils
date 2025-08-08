@@ -190,7 +190,7 @@ def get_skill_api(bus: MessageBusClient, skill_id: str) -> dict:
                                         context={"source": ["mana"],
                                                  "destination": ["skills"]}),
                                 reply_type="skillmanager.api.reply")
-    return msg.data
+    return msg.data if msg else {}
 
 
 def get_all_skills_api(bus: MessageBusClient) -> dict:
