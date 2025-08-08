@@ -201,7 +201,7 @@ def get_all_skills_api(bus: MessageBusClient) -> dict:
     """
     skills = get_skills_list(bus)
     skills_api = {}
-    for skill in skills.values:
+    for skill in skills.values():
         if not skill.get('active'):
             continue
         skill_api = get_skill_api(bus, skill['id'])
