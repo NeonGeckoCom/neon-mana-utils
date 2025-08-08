@@ -307,6 +307,25 @@ def get_skills_list():
     click.echo(pformat(skills))
 
 
+@neon_mana_cli.command(help="Get the API for a particular skill")
+@click.argument("skill_id")
+def get_skill_api(skill_id):
+    from neon_mana_utils.skills import get_skill_api
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    api = get_skill_api(client, skill_id)
+    click.echo(pformat(api))
+
+
+@neon_mana_cli.command(help="Get a list of available skill APIs")
+def get_all_skills_api():
+    from neon_mana_utils.skills import get_all_skills_api
+    client = MessageBusClient(**get_messagebus_config())
+    client.run_in_thread()
+    skills = get_all_skills_api(client)
+    click.echo(pformat(skills))
+
+
 @neon_mana_cli.command(help="Get a list of active skills")
 def get_active_skills():
     from neon_mana_utils.skills import get_active_skills

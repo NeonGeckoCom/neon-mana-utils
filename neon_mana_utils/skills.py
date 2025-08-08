@@ -177,3 +177,34 @@ def get_padatious_intent(bus: MessageBusClient, lang: str,
                                 reply_type="intent.service.padatious.reply",
                                 timeout=15)
     return msg.data.get('intent', dict())
+
+
+def get_skill_api(bus: MessageBusClient, skill_id: str) -> dict:
+    """
+    Get the API for a skill
+    :param bus: Connected MessageBusClient to query
+    :param skill_id: ID of the skill to get API for
+    :returns: dict skill API
+    """
+    msg = bus.wait_for_response(Message(f"{skill_id}.public_api",
+                                        context={"source": ["mana"],
+                                                 "destination": ["skills"]}),
+                                reply_type="skillmanager.api.reply")
+    return msg.data
+
+
+def get_all_skills_api(bus: MessageBusClient) -> dict:
+    """
+    Get a representation of all skill APIs
+    :param bus: Connected MessageBusClient to query
+    :returns: dict of all skill APIs by skill ID
+    """
+    skills = get_skills_list(bus)
+    skills_api = {}
+    for skill in skills.values:
+        if not skill.get('active'):
+            continue
+        skill_api = get_skill_api(bus, skill['id'])
+        skills_api[skill['id']] = skill_api
+    return skills_api
+
